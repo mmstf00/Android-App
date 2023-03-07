@@ -10,7 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 public class CalculatorFragment extends Fragment implements View.OnClickListener {
 
@@ -21,9 +23,16 @@ public class CalculatorFragment extends Fragment implements View.OnClickListener
     private Button multiplyButton;
     private Button divideButton;
     private TextView resultTextView;
+    private CustomViewModel viewModel;
 
     public CalculatorFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(requireActivity()).get(CustomViewModel.class);
     }
 
     @Override
@@ -80,6 +89,10 @@ public class CalculatorFragment extends Fragment implements View.OnClickListener
                 result = operand1 / operand2;
                 break;
         }
+
+        // Passing the data between Fragments using ViewModel
+        viewModel.setOperand1(String.valueOf(operand1));
+        viewModel.setOperand2(String.valueOf(operand2));
 
         resultTextView.setText("Result: " + result);
     }

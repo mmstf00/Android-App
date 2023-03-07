@@ -10,14 +10,23 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 public class DrawFragment extends Fragment {
 
     private EditText operand1EditText, operand2EditText;
     private Button drawButton;
     private DrawView drawView;
+    private CustomViewModel viewModel;
 
     public DrawFragment() {
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(requireActivity()).get(CustomViewModel.class);
     }
 
     @Override
@@ -27,6 +36,22 @@ public class DrawFragment extends Fragment {
         operand2EditText = view.findViewById(R.id.operand2_edit_text);
         drawButton = view.findViewById(R.id.draw_button);
         drawView = view.findViewById(R.id.draw_view);
+
+        // Getting the 1st operand
+        viewModel.getOperand1().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String value) {
+                operand1EditText.setText(value);
+            }
+        });
+
+        // Getting the 2nd operand
+        viewModel.getOperand2().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String value) {
+                operand2EditText.setText(value);
+            }
+        });
 
         drawButton.setOnClickListener(new View.OnClickListener() {
             @Override

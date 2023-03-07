@@ -11,15 +11,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 public class OctalFragment extends Fragment {
 
     private EditText decimalEditText;
     private TextView octalTextView;
     private Button convertButton;
+    private CustomViewModel viewModel;
 
     public OctalFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(requireActivity()).get(CustomViewModel.class);
     }
 
     @Override
@@ -32,6 +41,14 @@ public class OctalFragment extends Fragment {
         decimalEditText = view.findViewById(R.id.decimal_edittext);
         octalTextView = view.findViewById(R.id.octal_textview);
         convertButton = view.findViewById(R.id.convert_button);
+
+        // Getting the 1st operand
+        viewModel.getOperand1().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String value) {
+                decimalEditText.setText(value);
+            }
+        });
 
         // Set click listener for convert button
         convertButton.setOnClickListener(new View.OnClickListener() {
